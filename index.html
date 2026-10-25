@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mijn homepagina</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="mpr_data.js"></script>
+  </head>
+  <body>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Toggle button for section
+        const toggleBtn1 = document.getElementById("toggle-about");
+        const aboutSection = document.getElementById("about");
+        const toggleBtn2 = document.getElementById("toggle-grafiek");
+        const grafiekSection = document.getElementById("grafiek");
+
+        toggleBtn1.addEventListener("click", function () {
+          aboutSection.classList.toggle("hidden");
+          const isHidden = aboutSection.classList.contains("hidden");
+          toggleBtn.textContent = isHidden
+            ? "Over mij tonen"
+            : "Over mij verbergen";
+        });
+
+        toggleBtn2.addEventListener("click", function () {
+          grafiekSection.classList.toggle("hidden");
+          const isHidden = grafiekSection.classList.contains("hidden");
+          toggleBtn.textContent = isHidden
+            ? "Grafiek tonen"
+            : "Grafiek verbergen";
+        });
+
+        // Create MPR chart from mpr_data.js
+        // mpr_data.js contains array of objects with date_time and production
+        const data = mpr_data;
+
+        // Set up chart dimensions - fit within section
+        const margin = { top: 20, right: 20, bottom: 60, left: 50 };
+        const width = 500 - margin.left - margin.right;
+        const height = 320 - margin.top - margin.bottom;
+
+        const svg = d3
+          .select("#chart")
+          .append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Parse date_time strings as dates
+        const parseDate = d3.timeParse("%Y-%m-%d");
+        data.forEach((d) => {
+          d.date_time = parseDate(d.date_time);
+          d.production = +d.production;
+        });
+
+        // Create date scale (x-axis)
+        const x = d3
+          .scaleTime()
+          .domain(d3.extent(data, (d) => d.date_time))
+          .range([0, width]);
+
+        // Create production scale (y-axis)
+        const maxProduction = d3.max(data, (d) => d.production);
+        const y = d3
+          .scaleLinear()
+          .domain([0, maxProduction * 1.1])
+          .range([height, 0]);
+
+        // Add X axis with date labels
+        const xAxis = svg
+          .append("g")
+          .attr("transform", `translate(0,${height})`)
+          .call(d3.axisBottom(x).ticks(8).tickFormat(d3.timeFormat("%b %Y")));
+
+        // Style x-axis labels
+        xAxis
+          .selectAll("text")
+          .attr("transform", "rotate(-45)")
+          .style("text-anchor", "end")
+          .style("font-size", "11px")
+          .style("font-family", "system-ui, sans-serif");
+
+        // Add Y axis with production values
+        const yAxis = svg.append("g").call(d3.axisLeft(y));
+
+        // Style y-axis labels
+        yAxis
+          .selectAll("text")
+          .style("font-size", "11px")
+          .style("font-family", "system-ui, sans-serif");
+
+        // Add X axis label
+        svg
+          .append("text")
+          .attr(
+            "transform",
+            `translate(${width / 2},${height + margin.top + 35})`,
+          )
+          .style("text-anchor", "middle")
+          .style("font-size", "13px")
+          .style("font-family", "system-ui, sans-serif")
+          .style("font-weight", "500")
+          .text("Datum");
+
+        // Add Y axis label
+        svg
+          .append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0 - margin.left)
+          .attr("x", 0 - height / 2)
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .style("font-size", "13px")
+          .style("font-family", "system-ui, sans-serif")
+          .style("font-weight", "500")
+          .text("Productie (kg)");
+
+        // Add chart title
+        svg
+          .append("text")
+          .attr("x", width / 2)
+          .attr("y", -10)
+          .attr("text-anchor", "middle")
+          .style("font-weight", "bold")
+          .style("font-size", "14px")
+          .style("font-family", "system-ui, sans-serif")
+          .text("Melkproductie per datum");
+
+        // Draw line chart
+        const line = d3
+          .line()
+          .x((d) => x(d.date_time))
+          .y((d) => y(d.production));
+
+        svg
+          .append("path")
+          .datum(data)
+          .attr("fill", "none")
+          .attr("stroke", "#2563eb")
+          .attr("stroke-width", 2)
+          .attr("d", line);
+
+        // Add data points
+        svg
+          .selectAll(".dot")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", (d) => x(d.date_time))
+          .attr("cy", (d) => y(d.production))
+          .attr("r", 4)
+          .attr("fill", "#2563eb");
+      });
+    </script>
+    <!-- Header uitgezet; haal de commentaartekens weg om hem terug te zetten
+    <header class="site-header">
+      <a href="#" class="logo">Mijn homepagina</a>
+      <nav>
+        <a href="#about">Over mij</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+    -->
+
+    <main>
+      <section class="profile-card">
+        <img
+          src="PXL_20260726_064143001.jpg"
+          alt="Foto van Albart Coster"
+          class="avatar"
+        />
+        <div class="profile-text">
+          <h1 class="name">Albart Coster</h1>
+          <p class="bio">
+            Nutritionist melkvee, en data scientist. Maak graag gebruik van
+            beschikbare data voor onderbouwing van mijn advieswerk.
+          </p>
+        </div>
+      </section>
+
+      <button id="toggle-about" class="toggle-btn">Over mij tonen</button>
+      <section id="about" class="toggle-section hidden">
+        <h2>Over mij</h2>
+        <p>
+          Ik ben Albart Coster. Al jaren werkzaam als onafhankelijk nutritionist
+          voor melkvee. Ik maak graag gebruik van beschikbare data om mijn
+          advieswerk te onderbouwen. Ik werk voor bedrijven in Nederland en
+          Duitsland. In mijn werk combineer ik wetenschappelijke kennis met
+          praktische ervaring. Ik ben altijd op zoek naar nieuwe inzichten en
+          manieren om mijn klanten beter te kunnen adviseren met data van onze
+          klanten. Voor de analyse van deze data heb ik tot nu toe veel gewerkt
+          met R, maar ik probeer steeds meer gebruik te maken van webbased tools
+          zoals D3 en javascript.
+        </p>
+      </section>
+
+      <button id="toggle-grafiek" class="toggle-btn">Grafiek tonen</button>
+      <section id="grafiek" class="toggle-section hidden">
+        <h2>Voorbeeld grafiek</h2>
+        <div id="chart"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contact">
+      <nav class="footer-links">
+        <a
+          href="https://github.com/albartcoster"
+          aria-label="GitHub"
+          title="GitHub"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+            />
+          </svg>
+        </a>
+        <a
+          href="mailto:albart@dairyconsult.nl"
+          aria-label="E-mail"
+          title="E-mail"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+            />
+            <path d="m22 6-10 7L2 6" />
+          </svg>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/albart-coster-88bba723"
+          aria-label="LinkedIn"
+          title="LinkedIn"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"
+            />
+            <circle cx="4" cy="4" r="2" />
+          </svg>
+        </a>
+        <a
+          href="https://www.dairyconsult.nl"
+          aria-label="Dairyconsult"
+          title="Dairyconsult"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path
+              d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+            />
+          </svg>
+        </a>
+      </nav>
+      <p>&copy; 2026 Albart Coster</p>
+    </footer>
+  </body>
+</html>

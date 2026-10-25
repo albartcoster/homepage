@@ -1,0 +1,209 @@
+body {
+  background: #f3f4f6;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #1f2937;
+}
+
+a {
+  color: #2563eb;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 18px;
+  color: #1f2937;
+  text-decoration: none;
+}
+
+.site-header nav a {
+  margin-left: 20px;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.site-header nav a:hover {
+  color: #2563eb;
+}
+
+/* Main content */
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 16px;
+}
+
+/* All sections share the same card look */
+section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  line-height: 1.6;
+}
+
+section h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+#chart {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+#chart svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+#chart text {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  fill: #6b7280;
+}
+
+#chart .dot {
+  stroke: white;
+  stroke-width: 1px;
+}
+
+#chart .dot:hover {
+  stroke-width: 2px;
+}
+
+#chart line {
+  stroke: #d1d5db;
+  stroke-width: 1px;
+}
+
+#chart path {
+  stroke: #2563eb;
+  stroke-width: 2px;
+  fill: none;
+}
+
+/* Profile card: photo next to the text */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding: 32px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #e5e7eb;
+}
+
+.name {
+  margin: 0 0 8px;
+  color: #1f2937;
+  font-size: 28px;
+}
+
+.bio {
+  color: #6b7280;
+  font-size: 16px;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+/* On small screens: stack photo above the text */
+@media (max-width: 560px) {
+  .profile-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* Toggle button */
+.toggle-btn {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto 24px;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+
+.toggle-btn:hover {
+  background: #1d4ed8;
+}
+
+.toggle-section.hidden {
+  display: none;
+}
+
+.follow-btn {
+  display: inline-block;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 10px 32px;
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.follow-btn:hover {
+  background: #1d4ed8;
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 24px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-bottom: 8px;
+}
+
+.footer-links a {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.footer-links svg {
+  width: 24px;
+  height: 24px;
+}
+
+.footer-links a:hover {
+  color: #2563eb;
+}
